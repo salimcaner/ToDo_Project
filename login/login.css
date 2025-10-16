@@ -13,14 +13,20 @@ z        url("/css/fonts/Holy Cream Regular.otf") format('opentype');
     --text-color: #eaf2ef;
     --background-color: #912f56;
     --font-family: 'Holy Cream','cursive', sans-serif;
+    text-decoration: none;
+    list-style: none;
 }
 
 body{
-    background-color: var(--background-color);
+    background-color: #912f56;
     color: var(--text-color);
     background-repeat: no-repeat;
     background-size: cover;
     background-attachment: fixed;
     background-position: center center;
     font-family: var(--font-family);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;    
 }

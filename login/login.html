@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="To Do List">
+    <meta name="viewport" content="width=device-width, initial-scale =1.0">
+    <link rel="stylesheet" href="login.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"/>
+
+    <title>Login/Giriş</title>
+</head>
+<body>
+   <div class="container">
+        <!--Giriş Formu-->
+        <div class="form-box login">
+            <form action="/html/home.html">
+                <h2>Giriş Yap</h2>
+                <div class="input-box">
+                    <input type="text" placeholder="Username">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <div class="input-box">
+                    <input type="password" placeholder="Password">
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+                <div class="forgot-link">
+                    <a href="#">Şifremi Unuttum</a>
+                </div>
+                <button type="submit" class="btn">Giriş Yap</button>
+                <p>Sosyal Medyayla Giriş Yap</p>
+                <div class="social-icons">
+                    <a href="https://accounts.google.com/login?hl=tr"><i class="fa-brands fa-google"></i></a>
+                    <a href="https://github.com/login"><i class="fa-brands fa-github"></i></a>
+                    <a href="https://www.linkedin.com/login"><i class="fa-brands fa-linkedin"></i></a>
+                </div>    
+            </form>
+        </div>
+
+        <!--Kayıt Formu-->
+        <div class="form-box register"> 
+            <form action="/html/home.html">
+                <h2>Kayıt Ol</h2>
+                <div class="input-box">
+                    <input type="text" placeholder="Username">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <div class="input-box">
+                    <input type="email" placeholder="Email">
+                    <i class="fa-solid fa-envelope"></i>
+                </div>
+                <div class="input-box">
+                    <input type="password" placeholder="Password">
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+                <button type="submit" class="btn">Kayıt Ol</button>
+                <p>Sosyal Medyayla Kayıt Ol</p>
+                <div class="social-icons">
+                    <a href="https://accounts.google.com/login?hl=tr"><i class="fa-brands fa-google"></i></a>
+                    <a href="https://github.com/login"><i class="fa-brands fa-github"></i></a>
+                    <a href="https://www.linkedin.com/login"><i class="fa-brands fa-linkedin"></i></a>
+                </div>    
+            </form>
+        </div>
+
+        <!--Geçiş Kutusu-->
+        <div class="toggle-box">
+                <!--Sol Geçiş Kutusu-->
+                <div class="toggle-panel toggle-left">
+                    <h1>Merhaba, Hoşgeldin!</h1>
+                    <p>Bir hesabın yok mu?</p>
+                    <button class="btn register-btn">Kayıt Ol</button>
+                </div>
+
+                <!--Sağ Geçiş Kutusu-->
+                <div class="toggle-panel toggle-right">
+                    <h1>Tekrardan Hoşgeldin!</h1>
+                    <p>Zaten bir hesabın var mı?</p>
+                    <button class="btn login-btn">Giriş Yap</button>
+                </div>
+        </div>
+
+
+
+
+
+
+   </div>
+    <script src="/java/login.js"></script>
+</body>
+</html>
