@@ -1,0 +1,26 @@
+@font-face {
+    font-family: "Holy Cream";
+    src: url("/css/fonts/Holycream Regular.ttf") format('truetype'),
+z        url("/css/fonts/Holy Cream Regular.otf") format('opentype');
+}
+
+*{
+    box-sizing: border-box;
+    margin: 0;
+}
+
+:root{
+    --text-color: #eaf2ef;
+    --background-color: #912f56;
+    --font-family: 'Holy Cream','cursive', sans-serif;
+}
+
+body{
+    background-color: var(--background-color);
+    color: var(--text-color);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center center;
+    font-family: var(--font-family);
+}
