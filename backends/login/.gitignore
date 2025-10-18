@@ -1,0 +1,13 @@
+# Sanal ortam klasörleri
+.venv/
+venv/
+
+# Firebase servis anahtarı (çok önemli!)
+fastapi-auth-project-411d4-firebase-adminsdk-fbsvc-f6714f210e.json
+
+# Ortam değişkenleri
+.env
+
+# PyCharm ve önbellek dosyaları
+__pycache__/
+.idea/
