@@ -6,21 +6,24 @@
     <meta name="viewport" content="width=device-width, initial-scale =1.0">
     <link rel="stylesheet" href="login.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"/>
-
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet">
+    
     <title>Login/Giriş</title>
 </head>
 <body>
    <div class="container">
         <!--Giriş Formu-->
         <div class="form-box login">
-            <form action="/html/home.html">
+            <form id="loginForm">
                 <h2>Giriş Yap</h2>
                 <div class="input-box">
-                    <input type="text" placeholder="Username">
+                    <input type="email" placeholder="Email" id="loginEmail">
                     <i class="fa-solid fa-user"></i>
                 </div>
                 <div class="input-box">
-                    <input type="password" placeholder="Password">
+                    <input type="password" placeholder="Password" id="loginPassword">
                     <i class="fa-solid fa-lock"></i>
                 </div>
                 <div class="forgot-link">
@@ -38,18 +41,14 @@
 
         <!--Kayıt Formu-->
         <div class="form-box register"> 
-            <form action="/html/home.html">
+            <form id="registerForm">
                 <h2>Kayıt Ol</h2>
                 <div class="input-box">
-                    <input type="text" placeholder="Username">
-                    <i class="fa-solid fa-user"></i>
-                </div>
-                <div class="input-box">
-                    <input type="email" placeholder="Email">
+                    <input type="email" placeholder="Email" id="registerEmail">
                     <i class="fa-solid fa-envelope"></i>
                 </div>
                 <div class="input-box">
-                    <input type="password" placeholder="Password">
+                    <input type="password" placeholder="Password" id="registerPassword">
                     <i class="fa-solid fa-lock"></i>
                 </div>
                 <button type="submit" class="btn">Kayıt Ol</button>
