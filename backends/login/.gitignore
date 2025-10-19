@@ -1,0 +1,14 @@
+# Sanal ortam klasörleri
+.venv/
+venv/
+
+# Firebase servis anahtarı (çok önemli!)
+*.json
+firebase-adminsdk-*.json
+
+# Ortam değişkenleri
+.env
+
+# PyCharm ve önbellek dosyaları
+__pycache__/
+.idea/

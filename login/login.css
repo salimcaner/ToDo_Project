@@ -12,7 +12,7 @@ z        url("fonts/Holy Cream Regular.otf") format('opentype');
 :root{
     --text-color: #eaf2ef;
     --background-color: #912f56;
-    --font-family: 'Arial', sans-serif;
+    --font-family: "Indie Flower", cursive;
     text-decoration: none;
     list-style: none;
 }
@@ -101,11 +101,13 @@ form{
     font-size: 16px;
     color: #912f56;
     font-weight: 500;
+    font-family: var(--font-family);
 }
 
 .input-box input::placeholder{
     color: #912f56;
     font-weight: 400;
+    font-family: var(--font-family);
 }
 
 .input-box i{
@@ -143,6 +145,7 @@ form{
     border-radius: 12px;
     font-size: 16px;
     font-weight: 600;
+    font-family: var(--font-family);
 }
 
 .btn:hover{
@@ -218,12 +221,12 @@ form{
 
 .toggle-panel.toggle-right{
     right: -50%;
-    transition-delay: 1.2s;
+    transition-delay: 0.6s;
 }
 
 .container.active .toggle-panel.toggle-right{
-    right: -50%;
-    transition-delay: 0.6s;
+    right: 0;
+    transition-delay: 1.2s;
 }
 
 .toggle-panel p{
