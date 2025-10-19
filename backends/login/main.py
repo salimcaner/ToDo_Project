@@ -12,9 +12,7 @@ import json     # JSON işlemleri için import et
 
 # Firebase Web API Key'ini ortam değişkeninden al
 import os
-FIREBASE_WEB_API_KEY = os.getenv("FIREBASE_WEB_API_KEY")
-if not FIREBASE_WEB_API_KEY:
-    raise ValueError("FIREBASE_WEB_API_KEY ortam değişkeni ayarlanmalı!")
+FIREBASE_WEB_API_KEY = os.getenv("FIREBASE_WEB_API_KEY", "AIzaSyArVmmEeBYNl55gDMno29_RbML03AmSqB0")
 
 class UserSchema(BaseModel):
     email: str
