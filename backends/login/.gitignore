@@ -3,7 +3,8 @@
 venv/
 
 # Firebase servis anahtarı (çok önemli!)
-fastapi-auth-project-411d4-firebase-adminsdk-fbsvc-f6714f210e.json
+*.json
+firebase-adminsdk-*.json
 
 # Ortam değişkenleri
 .env
