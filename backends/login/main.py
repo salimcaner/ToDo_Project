@@ -10,10 +10,9 @@ from fastapi import Depends
 import requests # requests kütüphanesini import et
 import json     # JSON işlemleri için import et
 
-# Firebase Web API Key'ini buraya yapıştır
-# GÜVENLİK NOTU: Production ortamında bu anahtarı doğrudan koda yazmak yerine
-# ortam değişkenlerinden (environment variables) veya bir config dosyasından okumak daha güvenlidir.
-FIREBASE_WEB_API_KEY = "AIzaSyArVmmEeBYNl55gDMno29_RbML03AmSqB0" # firebaseConfig içindeki apiKey
+# Firebase Web API Key'ini ortam değişkeninden al
+import os
+FIREBASE_WEB_API_KEY = os.getenv("FIREBASE_WEB_API_KEY", "AIzaSyArVmmEeBYNl55gDMno29_RbML03AmSqB0")
 
 class UserSchema(BaseModel):
     email: str
@@ -37,7 +36,8 @@ app.add_middleware(
 )
 
 # 3. Firebase Admin SDK'sını başlat (Mevcut kodun)
-SERVICE_ACCOUNT_FILE = 'fastapi-auth-project-411d4-firebase-adminsdk-fbsvc-f6714f210e.json'
+import os
+SERVICE_ACCOUNT_FILE = os.path.join(os.path.dirname(__file__), 'fastapi-auth-project-411d4-firebase-adminsdk-fbsvc-f6714f210e.json')
 try:
     cred = credentials.Certificate(SERVICE_ACCOUNT_FILE)
     firebase_admin.initialize_app(cred)
@@ -48,27 +48,26 @@ except Exception as e:
 # Token doğrulama (Mevcut kodun)
 token_auth_scheme = HTTPBearer()
 def get_current_user(cred: HTTPAuthorizationCredentials = Depends(token_auth_scheme)):
-    # ... (mevcut get_current_user fonksiyonun içeriği) ...
-     if not cred:
-         raise HTTPException(
+    if not cred:
+        raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Bearer token bulunamadı",
-            headers= {"WWW-Authenticate": "Bearer"}
+            headers={"WWW-Authenticate": "Bearer"}
         )
-     try:
+    try:
         # Gelen token'ı Firebase'e gönderip doğruluğunu kontrol ediyoruz.
         # cred bir HTTPAuthorizationCredentials nesnesi, token'ı almak için .credentials kullanılır.
         token = cred.credentials
         decoded_token = auth.verify_id_token(token)
-     except Exception as e:
+        # Token geçerliyse, içindeki kullanıcı bilgilerini (payload) döndürüyoruz.
+        return decoded_token
+    except Exception as e:
         # Token geçersiz, süresi dolmuş veya başka bir hata varsa...
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail=f"Geçersiz token: {e}",
             headers={"WWW-Authenticate": "Bearer"},
         )
-     # Token geçerliyse, içindeki kullanıcı bilgilerini (payload) döndürüyoruz.
-     return decoded_token
 
 
 # 4. Basit bir test endpoint'i (Mevcut kodun)
@@ -88,13 +87,13 @@ def create_user(user: UserSchema):
 
     except auth.EmailAlreadyExistsError:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, # status==status... kısmını düzelttim
-            detail = "Bu email adresi zaten kullanılıyor"
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Bu email adresi zaten kullanılıyor"
         )
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail = f"HATA: Sunucu Hatası: {str(e)}" # Hatayı string'e çevir
+            detail=f"HATA: Sunucu Hatası: {str(e)}"
         )
 
 # YENİ LOGIN ENDPOINT'İ
@@ -123,7 +122,7 @@ def login_user(user: UserSchema):
         id_token = result.get("idToken")
 
         if not id_token:
-             raise HTTPException(
+            raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Firebase'den idToken alınamadı."
             )
@@ -141,7 +140,7 @@ def login_user(user: UserSchema):
 
             # Firebase hata mesajlarına göre özel durumlar
             if "INVALID_PASSWORD" in error_message or "EMAIL_NOT_FOUND" in error_message or "INVALID_LOGIN_CREDENTIALS" in error_message:
-                 raise HTTPException(
+                raise HTTPException(
                     status_code=status.HTTP_401_UNAUTHORIZED,
                     detail="E-posta veya şifre hatalı."
                 )
@@ -151,18 +150,86 @@ def login_user(user: UserSchema):
                     detail=f"Giriş hatası: {error_message}"
                 )
         except (ValueError, AttributeError):
-             # Yanıt JSON değilse veya response nesnesi yoksa
-             raise HTTPException(
+            # Yanıt JSON değilse veya response nesnesi yoksa
+            raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=f"API isteği sırasında hata: {str(e)}"
             )
     except Exception as e:
         # Diğer beklenmedik hatalar
-         raise HTTPException(
+        raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Beklenmedik bir sunucu hatası oluştu: {str(e)}"
         )
 
+'''
+# FORGOT PASSWORD ENDPOINT'İ
+@app.post("/forgot-password")
+def forgot_password(forgot_data: ForgotPasswordSchema):
+    """
+    Firebase'in şifre sıfırlama e-postası gönderme özelliğini kullanır.
+    """
+    # Firebase Auth REST API endpoint URL'si (şifre sıfırlama)
+    rest_api_url = "https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode"
+    
+    # Gönderilecek veri (payload)
+    payload = json.dumps({
+        "requestType": "PASSWORD_RESET",
+        "email": forgot_data.email
+    })
+    
+    # API isteği için parametreler (Web API Key)
+    params = {"key": FIREBASE_WEB_API_KEY}
+    
+    try:
+        # Firebase REST API'sine POST isteği gönder
+        response = requests.post(rest_api_url, params=params, data=payload)
+        response.raise_for_status()  # HTTP hata kodları için exception fırlat
+        
+        # Başarılı yanıt
+        result = response.json()
+        return {
+            "message": "Şifre sıfırlama e-postası başarıyla gönderildi.",
+            "email": forgot_data.email
+        }
+        
+    except requests.exceptions.RequestException as e:
+        # Network hatası veya HTTP hata kodu varsa
+        try:
+            # Firebase'den gelen hata detayını almaya çalış
+            error_data = e.response.json()
+            error_message = error_data.get("error", {}).get("message", "Bilinmeyen Firebase hatası")
+            print(f"Firebase Forgot Password Hatası: {error_message}")
+            
+            # Firebase hata mesajlarına göre özel durumlar
+            if "EMAIL_NOT_FOUND" in error_message:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail="Bu e-posta adresi sistemde kayıtlı değil."
+                )
+            elif "INVALID_EMAIL" in error_message:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Geçersiz e-posta adresi."
+                )
+            else:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail=f"Şifre sıfırlama hatası: {error_message}"
+                )
+        except (ValueError, AttributeError):
+            # Yanıt JSON değilse veya response nesnesi yoksa
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"API isteği sırasında hata: {str(e)}"
+            )
+    except Exception as e:
+        # Diğer beklenmedik hatalar
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Beklenmedik bir sunucu hatası oluştu: {str(e)}"
+        )
+'''
 
 # /me endpoint'i (Mevcut kodun - İçeriğini token doğrulama için get_current_user'a göre ayarladım)
 @app.get("/me")
@@ -182,6 +249,6 @@ def get_user_profile(user_data: dict = Depends(get_current_user)):
 
 
 # Uvicorn ile çalıştırmak için (opsiyonel, terminalden de çalıştırılabilir)
-# if __name__ == "__main__":
-#     import uvicorn
-#     uvicorn.run(app, host="127.0.0.1", port=8000)
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="127.0.0.1", port=8000)
