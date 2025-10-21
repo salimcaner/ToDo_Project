@@ -104,10 +104,17 @@ form{
     top: 10px;
 }
 
-.input-box input:focus ~ label{
+.input-box input:focus~label{
     top: -20px;
     font-size: 14px;
     color: #912f56;
+}
+
+.input-box input:not(:placeholder-shown)~label{
+    top: -20px;
+    font-size: 14px;
+    color: #912f56;
+
 }
 .input-box input:focus{
    border-width: 2px;
@@ -120,7 +127,8 @@ form{
     transform: translateY(-50%);
     font-size: 20px;
 }
-#showPassword{
+
+.checkbox{
     position: absolute;
     right: 20px;
     top: 50%;
