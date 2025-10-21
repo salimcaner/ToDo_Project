@@ -162,7 +162,17 @@ def login_user(user: UserSchema):
             detail=f"Beklenmedik bir sunucu hatası oluştu: {str(e)}"
         )
 
-'''
+
+class UserSchema(BaseModel):
+    email:str
+    password:str
+
+class ForgotPasswordSchema(BaseModel):
+    email:str
+
+class LoginResponseSchema(BaseModel):
+    idToken:str
+
 # FORGOT PASSWORD ENDPOINT'İ
 @app.post("/forgot-password")
 def forgot_password(forgot_data: ForgotPasswordSchema):
@@ -229,7 +239,7 @@ def forgot_password(forgot_data: ForgotPasswordSchema):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Beklenmedik bir sunucu hatası oluştu: {str(e)}"
         )
-'''
+
 
 # /me endpoint'i (Mevcut kodun - İçeriğini token doğrulama için get_current_user'a göre ayarladım)
 @app.get("/me")
