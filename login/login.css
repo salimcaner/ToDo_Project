@@ -1,8 +1,4 @@
-/* @font-face {
-    font-family: "Holy Cream";
-    src: url("fonts/Holycream Regular.ttf") format('truetype'),
-z        url("fonts/Holy Cream Regular.otf") format('opentype');
-} */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
 
 *{
     box-sizing: border-box;
@@ -12,14 +8,14 @@ z        url("fonts/Holy Cream Regular.otf") format('opentype');
 :root{
     --text-color: #eaf2ef;
     --background-color: #912f56;
-    --font-family: "Indie Flower", cursive;
+    --font-family: "Nunito", sans-serif;
     text-decoration: none;
     list-style: none;
 }
 
 /*Body styles*/
 body{
-    background-color: #912f56;
+    background: url(/picture/backgroun-login.jpg);
     color: var(--text-color);
     background-repeat: no-repeat;
     background-size: cover;
@@ -92,24 +88,31 @@ form{
 }
 
 .input-box input{
-    width: 100%;
-    padding: 13px 50px 13px 20px;
-    background-color: #bcc0bf;
-    border-radius: 8px;
-    border: none;
-    outline: none;
     font-size: 16px;
-    color: #912f56;
-    font-weight: 500;
-    font-family: var(--font-family);
+    padding: 10px 10px 10px 5px;
+    display: block;
+    width: 200px;
+    outline: none;
+    border: none;
+    border-bottom: 1px solid #912f56;
+    background: transparent;
 }
 
-.input-box input::placeholder{
-    color: #912f56;
-    font-weight: 400;
-    font-family: var(--font-family);
+.input-box label{
+    position: absolute;
+    left: 5px;
+    top: 10px;
 }
 
+.input-box input:focus ~ label{
+    top: -20px;
+    font-size: 14px;
+    color: #912f56;
+}
+.input-box input:focus{
+   border-width: 2px;
+    border-bottom-color: #912f56;
+}
 .input-box i{
     position: absolute;
     right: 20px;
@@ -117,7 +120,13 @@ form{
     transform: translateY(-50%);
     font-size: 20px;
 }
-
+#showPassword{
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+}
 .forgot-link{
     margin: -15px 0 15px;
 }
