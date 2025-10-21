@@ -1,3 +1,4 @@
+
 //Eleman Seçimi
 const container = document.querySelector('.container');
 const registerBtn = document.querySelector('.register-btn');
@@ -11,6 +12,9 @@ const loginForm = document.querySelector('#loginForm');
 const loginEmail = document.querySelector('#loginEmail');
 const loginPassword = document.querySelector('#loginPassword');
 
+//Backend API adresi
+const API_BASE_URL = 'http://127.0.0.1:8000';
+
 registerBtn.addEventListener('click', ()=>{
     container.classList.add('active');
 });
@@ -18,9 +22,6 @@ registerBtn.addEventListener('click', ()=>{
 loginBtn.addEventListener('click', () =>{
     container.classList.remove('active');
 });
-
-//Backend API adresi
-const API_BASE_URL = 'http://127.0.0.1:8000';
 
 //kayıt Formu Gönderildiğinde Çalışacak Fonksiyon
 registerForm.addEventListener('submit', async (e) =>{
@@ -30,32 +31,40 @@ registerForm.addEventListener('submit', async (e) =>{
     const password = registerPassword.value;
 
     try{
+        // Backend API'ye kayıt isteği gönder
         const response = await fetch(`${API_BASE_URL}/signup`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ email, password}),
+            body: JSON.stringify({
+                email: email,
+                password: password
+            })
         });
+
         const data = await response.json();
 
-        if(!response.ok){
-            throw new Error(data.detail || "Bilinmeyen bir sunucu hatası oluştu.");
+        if (response.ok) {
+            // Kayıt başarılı
+            console.log("Kayıt başarılı! Kullanıcı UID:", data.uid);
+            alert("Kayıt başarıyla tamamlandı! Giriş yapabilirsiniz.");
+            
+            // Temizleme
+            registerEmail.value = '';
+            registerPassword.value = '';
+            container.classList.remove('active'); // Giriş formunu göster
+        } else {
+            // Backend'den gelen hata mesajını göster
+            throw new Error(data.detail || 'Kayıt sırasında bir hata oluştu');
         }
 
-        // Kayıt başarılı olduğunda
-        console.log("Kayıt başarılı!", data); // Backend'den gelen mesajı logla (örn: {"message": "...", "uid": "..."})
-        alert("Kayıt başarıyla tamamlandı! Giriş yapabilirsiniz.");
-        registerEmail.value = ''; // Inputları temizle
-        registerPassword.value = '';
-        container.classList.remove('active'); // Giriş formunu göster
-
     } catch (error) {
-        // Kayıt sırasında hata olursa (network veya sunucu hatası)
-        console.error("Kayıt hatası:", error);
+        console.error("Kayıt Hatası: ", error);
         alert(`Kayıt sırasında bir hata oluştu: ${error.message}`);
     }
 });
+
 // Giriş formu gönderildiğinde çalışacak fonksiyon
 loginForm.addEventListener('submit', async (e) => {
     e.preventDefault(); // Formun varsayılan gönderme işlemini engelle
@@ -64,38 +73,39 @@ loginForm.addEventListener('submit', async (e) => {
     const password = loginPassword.value;
 
     try {
+        // Backend API'ye giriş isteği gönder
         const response = await fetch(`${API_BASE_URL}/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ email, password }),
+            body: JSON.stringify({
+                email: email,
+                password: password
+            })
         });
 
-        const data = await response.json(); // Yanıtı JSON olarak al
+        const data = await response.json();
 
-        if (!response.ok) {
-            // Sunucudan gelen hata mesajını göster (FastAPI'deki detail)
-            throw new Error(data.detail || 'Bilinmeyen bir sunucu hatası oluştu.');
+        if (response.ok) {
+            // Giriş başarılı
+            console.log("Giriş başarılı! ID Token:", data.idToken);
+            
+            // Token'ı localStorage'a kaydet
+            localStorage.setItem('firebaseIdToken', data.idToken);
+
+            alert("Giriş başarıyla yapıldı!");
+            loginEmail.value = ''; // Inputları temizle
+            loginPassword.value = '';
+
+            // Kullanıcıyı ana sayfaya yönlendir
+            window.location.href = '../home/home.html';
+        } else {
+            // Backend'den gelen hata mesajını göster
+            throw new Error(data.detail || 'Giriş sırasında bir hata oluştu');
         }
 
-        // Giriş başarılı olduğunda (backend sadece idToken dönüyor)
-        console.log("Giriş başarılı!");
-        const idToken = data.idToken;
-        console.log("Alınan ID Token:", idToken);
-
-        // Token'ı localStorage'a kaydet
-        localStorage.setItem('firebaseIdToken', idToken);
-
-        alert("Giriş başarıyla yapıldı!");
-        loginEmail.value = ''; // Inputları temizle
-        loginPassword.value = '';
-
-        // Kullanıcıyı ana sayfaya yönlendir
-        window.location.href = '/html/home.html'; // veya projenin ana sayfası
-
     } catch (error) {
-        // Giriş sırasında hata olursa (network veya sunucu hatası)
         console.error("Giriş hatası:", error);
         alert(`Giriş sırasında bir hata oluştu: ${error.message}`);
     }
