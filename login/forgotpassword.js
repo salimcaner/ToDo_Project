@@ -11,7 +11,7 @@ const API_BASE_URL = 'http://127.0.0.1:8000';
 sendLinkButton.addEventListener('click', async(e) => {
     e.preventDefault(); // Default değer gönderimini engeller
 
-    const email = forgotEmailInput.ariaValueMax;
+    const email = forgotEmailInput.value;
 
     //e-posta kontrolü
     if(!email){

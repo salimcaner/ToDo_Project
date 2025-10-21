@@ -127,14 +127,45 @@ form{
     transform: translateY(-50%);
     font-size: 20px;
 }
-
 .checkbox{
     position: absolute;
-    right: 20px;
-    top: 50%;
+    right: 120px;
+    top: 30px;
     transform: translateY(-50%);
     font-size: 20px;
 }
+.checkbox input{
+    position: absolute;
+    opacity: 0;
+}
+.checkbox label::before {
+  content: '';
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #333;
+  background-color: #fff;
+  border-radius: 4px;
+  margin-right: 8px; /* Metin ile arasındaki boşluk */
+  vertical-align: middle;
+}
+
+.checkbox input:checked + label::before {
+  background-color: #912f56; /* Seçili arka plan rengi */
+  border: 1px solid #eaf2ef;
+}
+
+/* Tik işareti ekleme */
+.checkbox input:checked + label::after {
+    content: '✓'; /* Veya bir ikon/svg */
+    position: absolute;
+    /* Konumlandırma ve stil verme */
+    color: #912f56;
+    background-color: #eaf2ef;
+    border: 1px solid #912f56;
+    /* ... diğer stil kuralları ... */
+}
+
 .forgot-link{
     margin: -15px 0 15px;
 }
