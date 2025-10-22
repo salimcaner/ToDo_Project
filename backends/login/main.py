@@ -173,6 +173,7 @@ class ForgotPasswordSchema(BaseModel):
 class LoginResponseSchema(BaseModel):
     idToken:str
 
+
 # FORGOT PASSWORD ENDPOINT'İ
 @app.post("/forgot-password")
 def forgot_password(forgot_data: ForgotPasswordSchema):
